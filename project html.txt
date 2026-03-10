@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PriceHunt India — Who Sells Cheaper?</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f8f4ff;--surface:#ffffff;--card:#ffffff;--border:#ede8f8;
+  --shadow:rgba(100,60,180,0.10);--accent:#6c3ce1;--accent2:#e14b8a;
+  --text:#1a1030;--muted:#8878aa;
+  --meesho:#f72b8e;--nykaa:#b5006a;--amazon:#c96000;
+  --flipkart:#1a5fe0;--blinkit:#9a7000;--zepto:#6220cc;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 10% 10%,rgba(108,60,225,0.08) 0%,transparent 50%),radial-gradient(ellipse at 90% 90%,rgba(225,75,138,0.07) 0%,transparent 50%);pointer-events:none;z-index:0;}
+
+header{position:relative;z-index:10;padding:44px 20px 36px;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(108,60,225,0.07) 0%,transparent 100%);}
+.logo-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:16px;}
+.logo-icon{width:50px;height:50px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 6px 24px rgba(108,60,225,0.35);}
+.site-name{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+h1{font-family:'Syne',sans-serif;font-size:clamp(1.6rem,5vw,3.2rem);font-weight:800;color:var(--text);margin-bottom:8px;line-height:1.1;}
+h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.tagline{font-size:15px;color:var(--muted);max-width:520px;margin:0 auto;}
+
+.search-hero{position:relative;z-index:20;max-width:700px;margin:28px auto 0;padding:0 20px;}
+.search-box{display:flex;align-items:center;background:var(--surface);border:2px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 8px 32px var(--shadow);transition:border-color 0.2s,box-shadow 0.2s;}
+.search-box:focus-within{border-color:var(--accent);box-shadow:0 8px 32px rgba(108,60,225,0.2);}
+.search-box .s-icon{padding:0 16px;font-size:20px;flex-shrink:0;color:var(--muted);}
+.search-box input{flex:1;border:none;outline:none;padding:16px 0;font-family:'Outfit',sans-serif;font-size:16px;font-weight:500;color:var(--text);background:transparent;}
+.search-box input::placeholder{color:var(--muted);font-weight:400;}
+.search-box .clear-btn{padding:0 16px;background:none;border:none;cursor:pointer;font-size:18px;color:var(--muted);display:none;}
+.search-results-count{text-align:center;margin-top:10px;font-size:12px;font-family:'Space Mono',monospace;color:var(--muted);letter-spacing:1px;min-height:18px;}
+
+.store-bar{position:sticky;top:0;z-index:30;background:rgba(248,244,255,0.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;flex-wrap:wrap;justify-content:center;gap:8px;}
+.schip{display:flex;align-items:center;gap:6px;padding:5px 14px;border-radius:100px;font-size:12px;font-weight:600;border:1.5px solid;transition:transform 0.18s;cursor:default;white-space:nowrap;}
+.schip:hover{transform:scale(1.06);}
+.sdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.sm{color:var(--meesho);border-color:rgba(247,43,142,0.28);background:rgba(247,43,142,0.07);}
+.sn{color:var(--nykaa);border-color:rgba(181,0,106,0.28);background:rgba(181,0,106,0.07);}
+.sa{color:var(--amazon);border-color:rgba(201,96,0,0.28);background:rgba(201,96,0,0.07);}
+.sf{color:var(--flipkart);border-color:rgba(26,95,224,0.28);background:rgba(26,95,224,0.07);}
+.sb{color:var(--blinkit);border-color:rgba(154,112,0,0.28);background:rgba(154,112,0,0.07);}
+.sz{color:var(--zepto);border-color:rgba(98,32,204,0.28);background:rgba(98,32,204,0.07);}
+
+.controls-row{position:relative;z-index:10;max-width:1100px;margin:22px auto 0;padding:0 20px;display:flex;gap:10px;flex-wrap:wrap;}
+.ctrl-select{background:var(--surface);border:1.5px solid var(--border);color:var(--text);padding:10px 18px;font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;border-radius:100px;outline:none;cursor:pointer;box-shadow:0 2px 8px var(--shadow);}
+
+.cat-scroll{position:relative;z-index:10;max-width:1100px;margin:16px auto 24px;padding:0 20px;display:flex;gap:8px;flex-wrap:wrap;}
+.ctab{display:flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-size:13px;font-weight:600;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all 0.2s;box-shadow:0 2px 6px var(--shadow);white-space:nowrap;}
+.ctab:hover,.ctab.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 4px 16px rgba(108,60,225,0.35);}
+
+.pgrid{position:relative;z-index:10;max-width:1100px;margin:0 auto;padding:0 20px 80px;display:grid;gap:18px;}
+.pcard{background:var(--card);border:1.5px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 4px 20px var(--shadow);transition:transform 0.28s,box-shadow 0.28s;animation:fadeUp 0.4s ease forwards;opacity:0;}
+.pcard:hover{transform:translateY(-5px);box-shadow:0 18px 44px rgba(108,60,225,0.18);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+
+.chead{display:flex;align-items:center;gap:14px;padding:18px 22px 16px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(108,60,225,0.03),rgba(225,75,138,0.02));}
+.pemoji{font-size:30px;width:60px;height:60px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f0ebff,#ffe8f4);border:1.5px solid var(--border);border-radius:14px;flex-shrink:0;}
+.pmeta{flex:1;min-width:0;}
+.pname{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pcat-badge{font-size:10px;font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);}
+.pbest{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;}
+.pbest-lbl{font-size:9px;font-family:'Space Mono',monospace;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.pbest-val{font-size:11.5px;font-weight:700;padding:4px 12px;border-radius:100px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;white-space:nowrap;box-shadow:0 3px 10px rgba(108,60,225,0.28);}
+
+.prow{display:grid;grid-template-columns:repeat(6,1fr);}
+@media(max-width:750px){.prow{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:440px){.prow{grid-template-columns:repeat(2,1fr);}}
+
+.pcell{padding:12px 13px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);transition:background 0.18s;position:relative;}
+.pcell:last-child{border-right:none;}
+.pcell:hover{background:#faf7ff;}
+.pcell.best{background:linear-gradient(135deg,rgba(108,60,225,0.07),rgba(225,75,138,0.05));}
+.pcell.best::after{content:'✦ BEST';position:absolute;top:5px;right:7px;font-size:7px;font-family:'Space Mono',monospace;color:var(--accent);letter-spacing:1px;font-weight:700;}
+.csname{font-size:9px;font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:5px;}
+.cprice{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;line-height:1;}
+.corig{font-size:10px;color:var(--muted);text-decoration:line-through;margin-top:2px;}
+.coff{display:inline-block;font-size:8.5px;font-family:'Space Mono',monospace;font-weight:700;color:#fff;background:var(--accent2);padding:2px 6px;border-radius:4px;margin-top:3px;}
+.cna{font-size:10px;font-family:'Space Mono',monospace;color:#ccc;margin-top:4px;}
+
+/* SHOP BUTTON — big, coloured, no URL shown */
+.shop-btn{
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  margin-top:8px;width:100%;
+  padding:7px 4px;border-radius:8px;
+  font-size:11px;font-family:'Outfit',sans-serif;font-weight:700;
+  cursor:pointer;border:none;transition:all 0.2s;
+  letter-spacing:0.3px;
+}
+.shop-btn:hover{opacity:0.85;transform:scale(1.03);}
+.shop-btn:active{transform:scale(0.97);}
+.shop-btn.na-btn{background:#f0ecff;color:#b0a8cc;cursor:not-allowed;font-size:10px;}
+
+.tm .csname{color:var(--meesho);}.tm .cprice{color:var(--meesho);}
+.tn .csname{color:var(--nykaa);}.tn .cprice{color:var(--nykaa);}
+.ta .csname{color:var(--amazon);}.ta .cprice{color:var(--amazon);}
+.tf .csname{color:var(--flipkart);}.tf .cprice{color:var(--flipkart);}
+.tb .csname{color:var(--blinkit);}.tb .cprice{color:var(--blinkit);}
+.tz .csname{color:var(--zepto);}.tz .cprice{color:var(--zepto);}
+
+.tm .shop-btn{background:rgba(247,43,142,0.12);color:var(--meesho);}
+.tn .shop-btn{background:rgba(181,0,106,0.10);color:var(--nykaa);}
+.ta .shop-btn{background:rgba(201,96,0,0.10);color:var(--amazon);}
+.tf .shop-btn{background:rgba(26,95,224,0.10);color:var(--flipkart);}
+.tb .shop-btn{background:rgba(154,112,0,0.10);color:var(--blinkit);}
+.tz .shop-btn{background:rgba(98,32,204,0.10);color:var(--zepto);}
+
+.cfoot{padding:11px 22px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:linear-gradient(135deg,#faf7ff,#fff4fb);border-top:1px solid var(--border);}
+.fl{font-size:12px;color:var(--muted);font-weight:500;white-space:nowrap;}
+.fa{font-size:13px;font-weight:700;color:var(--accent);white-space:nowrap;}
+.bwrap{flex:1;min-width:60px;height:5px;background:var(--border);border-radius:10px;overflow:hidden;}
+.bfill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:10px;}
+mark{background:rgba(108,60,225,0.18);color:var(--accent);border-radius:3px;padding:0 2px;}
+.no-res{display:none;text-align:center;padding:80px 20px;color:var(--muted);font-family:'Space Mono',monospace;font-size:13px;position:relative;z-index:10;}
+.no-res .nr-icon{font-size:48px;margin-bottom:16px;}
+footer{position:relative;z-index:10;text-align:center;padding:20px;border-top:1px solid var(--border);color:var(--muted);font-size:11px;letter-spacing:1px;background:var(--surface);font-family:'Space Mono',monospace;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:#c8b8f0;border-radius:5px;}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo-row">
+    <div class="logo-icon">🏷️</div>
+    <div class="site-name">PriceHunt India</div>
+  </div>
+  <h1>Who Sells <em>Cheaper?</em></h1>
+  <p class="tagline">Compare prices on Meesho, Nykaa, Amazon, Flipkart, Blinkit & Zepto — tap a store button to shop instantly!</p>
+  <div class="search-hero">
+    <div class="search-box">
+      <span class="s-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search cricket bat, lipstick, saree, sneakers, shampoo…" oninput="handleSearch()">
+      <button class="clear-btn" id="clearBtn" onclick="clearSearch()">✕</button>
+    </div>
+    <div class="search-results-count" id="resultCount"></div>
+  </div>
+</header>
+
+<div class="store-bar">
+  <div class="schip sm"><span class="sdot" style="background:var(--meesho)"></span>Meesho</div>
+  <div class="schip sn"><span class="sdot" style="background:var(--nykaa)"></span>Nykaa</div>
+  <div class="schip sa"><span class="sdot" style="background:var(--amazon)"></span>Amazon</div>
+  <div class="schip sf"><span class="sdot" style="background:var(--flipkart)"></span>Flipkart</div>
+  <div class="schip sb"><span class="sdot" style="background:var(--blinkit)"></span>Blinkit</div>
+  <div class="schip sz"><span class="sdot" style="background:var(--zepto)"></span>Zepto</div>
+</div>
+
+<div class="controls-row">
+  <select class="ctrl-select" id="sortSel" onchange="renderAll()">
+    <option value="">⇅ Sort By</option>
+    <option value="savings">💰 Best Savings</option>
+    <option value="low">⬇ Lowest Price</option>
+    <option value="high">⬆ Highest Price</option>
+    <option value="az">A–Z Name</option>
+  </select>
+</div>
+
+<div class="cat-scroll" id="catTabs"></div>
+<div class="pgrid" id="grid"></div>
+<div class="no-res" id="noRes">
+  <div class="nr-icon">🔎</div>
+  No products found for "<span id="noResQ"></span>".<br>Try another keyword!
+</div>
+<footer>✦ Tap any store button to search that product directly on the platform. Prices are indicative. ✦</footer>
+
+<script>
+// Search URL builders — each opens the store with the product pre-searched
+const STORES=[
+  {key:'meesho',   name:'Meesho',   icon:'🛍️', tc:'tm',
+   searchUrl: q=>`https://www.meesho.com/search?q=${encodeURIComponent(q)}`},
+  {key:'nykaa',    name:'Nykaa',    icon:'💄', tc:'tn',
+   searchUrl: q=>`https://www.nykaa.com/search/result/?q=${encodeURIComponent(q)}`},
+  {key:'amazon',   name:'Amazon',   icon:'📦', tc:'ta',
+   searchUrl: q=>`https://www.amazon.in/s?k=${encodeURIComponent(q)}`},
+  {key:'flipkart', name:'Flipkart', icon:'🛒', tc:'tf',
+   searchUrl: q=>`https://www.flipkart.com/search?q=${encodeURIComponent(q)}`},
+  {key:'blinkit',  name:'Blinkit',  icon:'⚡', tc:'tb',
+   searchUrl: q=>`https://blinkit.com/s/?q=${encodeURIComponent(q)}`},
+  {key:'zepto',    name:'Zepto',    icon:'🟣', tc:'tz',
+   searchUrl: q=>`https://www.zeptonow.com/search?query=${encodeURIComponent(q)}`},
+];
+
+const N=null;
+const PRODUCTS=[
+  // CRICKET KIT
+  {name:"Cricket Bat (Kashmir Willow)",emoji:"🏏",cat:"Cricket Kit",tags:"cricket sports bat",
+   prices:{meesho:{p:799,o:1499},nykaa:{p:N},amazon:{p:1199,o:2199},flipkart:{p:999,o:1999},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Cricket Bat (English Willow)",emoji:"🏏",cat:"Cricket Kit",tags:"cricket bat english willow",
+   prices:{meesho:{p:2499,o:4999},nykaa:{p:N},amazon:{p:3299,o:5999},flipkart:{p:2999,o:5499},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Cricket Helmet",emoji:"⛑️",cat:"Cricket Kit",tags:"cricket helmet safety sports",
+   prices:{meesho:{p:699,o:1299},nykaa:{p:N},amazon:{p:999,o:1799},flipkart:{p:849,o:1599},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Batting Gloves",emoji:"🧤",cat:"Cricket Kit",tags:"cricket gloves batting sports",
+   prices:{meesho:{p:299,o:599},nykaa:{p:N},amazon:{p:499,o:899},flipkart:{p:399,o:799},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Cricket Leg Pads",emoji:"🦵",cat:"Cricket Kit",tags:"cricket pads leg guards",
+   prices:{meesho:{p:499,o:999},nykaa:{p:N},amazon:{p:799,o:1499},flipkart:{p:649,o:1299},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Cricket Ball (Leather)",emoji:"🔴",cat:"Cricket Kit",tags:"cricket ball leather red",
+   prices:{meesho:{p:249,o:499},nykaa:{p:N},amazon:{p:399,o:699},flipkart:{p:299,o:599},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Cricket Kit Bag",emoji:"🎒",cat:"Cricket Kit",tags:"cricket bag kit sports duffel",
+   prices:{meesho:{p:899,o:1799},nykaa:{p:N},amazon:{p:1299,o:2499},flipkart:{p:1099,o:2199},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Cricket Stumps Set",emoji:"🪵",cat:"Cricket Kit",tags:"cricket stumps bails set",
+   prices:{meesho:{p:199,o:399},nykaa:{p:N},amazon:{p:349,o:649},flipkart:{p:279,o:549},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Cricket Shoes (Spike)",emoji:"👟",cat:"Cricket Kit",tags:"cricket shoes spikes sports",
+   prices:{meesho:{p:699,o:1399},nykaa:{p:N},amazon:{p:1099,o:2199},flipkart:{p:899,o:1799},blinkit:{p:N},zepto:{p:N}}},
+
+  // BEAUTY
+  {name:"Face Wash",emoji:"🧴",cat:"Beauty",tags:"face wash cleanser skincare",
+   prices:{meesho:{p:89,o:149},nykaa:{p:110,o:175},amazon:{p:119,o:180},flipkart:{p:105,o:169},blinkit:{p:129,o:190},zepto:{p:125,o:185}}},
+  {name:"Sunscreen SPF50",emoji:"☀️",cat:"Beauty",tags:"sunscreen spf50 skin care sun",
+   prices:{meesho:{p:159,o:299},nykaa:{p:185,o:349},amazon:{p:199,o:369},flipkart:{p:175,o:329},blinkit:{p:219,o:389},zepto:{p:209,o:379}}},
+  {name:"Lipstick",emoji:"💋",cat:"Beauty",tags:"lipstick lip color makeup cosmetics",
+   prices:{meesho:{p:99,o:199},nykaa:{p:145,o:269},amazon:{p:169,o:299},flipkart:{p:129,o:249},blinkit:{p:189,o:329},zepto:{p:179,o:319}}},
+  {name:"Kajal / Kohl",emoji:"✏️",cat:"Beauty",tags:"kajal kohl eye liner makeup",
+   prices:{meesho:{p:59,o:99},nykaa:{p:72,o:120},amazon:{p:89,o:139},flipkart:{p:69,o:109},blinkit:{p:99,o:149},zepto:{p:95,o:145}}},
+  {name:"Foundation / BB Cream",emoji:"🎨",cat:"Beauty",tags:"foundation bb cream makeup face",
+   prices:{meesho:{p:159,o:299},nykaa:{p:199,o:369},amazon:{p:229,o:399},flipkart:{p:179,o:329},blinkit:{p:249,o:429},zepto:{p:239,o:419}}},
+  {name:"Mascara",emoji:"👀",cat:"Beauty",tags:"mascara eye lash makeup",
+   prices:{meesho:{p:119,o:229},nykaa:{p:155,o:289},amazon:{p:179,o:319},flipkart:{p:139,o:259},blinkit:{p:199,o:349},zepto:{p:189,o:339}}},
+  {name:"Compact Powder",emoji:"🌸",cat:"Beauty",tags:"compact powder face makeup",
+   prices:{meesho:{p:129,o:249},nykaa:{p:165,o:299},amazon:{p:199,o:349},flipkart:{p:149,o:269},blinkit:{p:219,o:379},zepto:{p:209,o:369}}},
+  {name:"Vitamin C Serum",emoji:"🍋",cat:"Beauty",tags:"vitamin c serum skincare glow",
+   prices:{meesho:{p:179,o:349},nykaa:{p:229,o:449},amazon:{p:269,o:499},flipkart:{p:209,o:399},blinkit:{p:289,o:529},zepto:{p:279,o:519}}},
+  {name:"Perfume 50ml",emoji:"🌹",cat:"Beauty",tags:"perfume fragrance scent edp",
+   prices:{meesho:{p:299,o:599},nykaa:{p:395,o:749},amazon:{p:449,o:799},flipkart:{p:349,o:699},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Hair Oil 100ml",emoji:"💧",cat:"Beauty",tags:"hair oil coconut care growth",
+   prices:{meesho:{p:79,o:149},nykaa:{p:99,o:179},amazon:{p:119,o:199},flipkart:{p:89,o:159},blinkit:{p:129,o:219},zepto:{p:125,o:209}}},
+  {name:"Nail Paint Set",emoji:"💅",cat:"Beauty",tags:"nail polish paint color set",
+   prices:{meesho:{p:79,o:149},nykaa:{p:99,o:179},amazon:{p:119,o:199},flipkart:{p:89,o:159},blinkit:{p:139,o:219},zepto:{p:129,o:209}}},
+  {name:"Moisturiser SPF30",emoji:"🧴",cat:"Beauty",tags:"moisturiser face cream spf skin care",
+   prices:{meesho:{p:199,o:399},nykaa:{p:249,o:449},amazon:{p:279,o:499},flipkart:{p:229,o:429},blinkit:{p:299,o:529},zepto:{p:289,o:519}}},
+
+  // ELECTRONICS
+  {name:"Wireless Earbuds",emoji:"🎧",cat:"Electronics",tags:"earbuds wireless bluetooth audio earphones",
+   prices:{meesho:{p:799,o:1499},nykaa:{p:999,o:1799},amazon:{p:1199,o:1999},flipkart:{p:1099,o:1799},blinkit:{p:1299,o:1999},zepto:{p:N}}},
+  {name:"Smartwatch",emoji:"⌚",cat:"Electronics",tags:"smartwatch wearable fitness watch",
+   prices:{meesho:{p:1299,o:2499},nykaa:{p:1599,o:2799},amazon:{p:1499,o:2499},flipkart:{p:1349,o:2299},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Bluetooth Speaker",emoji:"🔊",cat:"Electronics",tags:"bluetooth speaker audio music portable",
+   prices:{meesho:{p:699,o:1299},nykaa:{p:849,o:1499},amazon:{p:999,o:1599},flipkart:{p:899,o:1499},blinkit:{p:1099,o:1699},zepto:{p:1049,o:1649}}},
+  {name:"Power Bank 20000mAh",emoji:"🔋",cat:"Electronics",tags:"power bank charger battery backup 20000",
+   prices:{meesho:{p:999,o:1999},nykaa:{p:N},amazon:{p:1299,o:2299},flipkart:{p:1149,o:2099},blinkit:{p:1399,o:2499},zepto:{p:1349,o:2399}}},
+  {name:"USB-C Fast Charger",emoji:"🔌",cat:"Electronics",tags:"charger usb c fast charging adapter",
+   prices:{meesho:{p:299,o:599},nykaa:{p:N},amazon:{p:449,o:799},flipkart:{p:349,o:649},blinkit:{p:499,o:799},zepto:{p:479,o:749}}},
+  {name:"Wireless Mouse",emoji:"🖱️",cat:"Electronics",tags:"wireless mouse computer laptop",
+   prices:{meesho:{p:399,o:799},nykaa:{p:N},amazon:{p:599,o:1099},flipkart:{p:549,o:999},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Smart LED Bulb",emoji:"💡",cat:"Electronics",tags:"smart led bulb light home wifi",
+   prices:{meesho:{p:299,o:599},nykaa:{p:N},amazon:{p:449,o:799},flipkart:{p:399,o:699},blinkit:{p:499,o:849},zepto:{p:469,o:799}}},
+  {name:"Portable SSD 500GB",emoji:"💾",cat:"Electronics",tags:"ssd storage portable hard drive",
+   prices:{meesho:{p:2499,o:4499},nykaa:{p:N},amazon:{p:3299,o:5499},flipkart:{p:2999,o:4999},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Mini Webcam HD",emoji:"📷",cat:"Electronics",tags:"webcam camera hd video call pc",
+   prices:{meesho:{p:899,o:1799},nykaa:{p:N},amazon:{p:1299,o:2499},flipkart:{p:1199,o:2199},blinkit:{p:N},zepto:{p:N}}},
+
+  // WOMEN FASHION
+  {name:"Kurti (Cotton Printed)",emoji:"👗",cat:"Women's Fashion",tags:"kurti women dress cotton printed ethnic",
+   prices:{meesho:{p:299,o:599},nykaa:{p:399,o:749},amazon:{p:449,o:849},flipkart:{p:349,o:699},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Saree (Chiffon)",emoji:"🥻",cat:"Women's Fashion",tags:"saree chiffon women ethnic traditional",
+   prices:{meesho:{p:499,o:999},nykaa:{p:649,o:1299},amazon:{p:749,o:1499},flipkart:{p:599,o:1199},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Women's Leggings",emoji:"🩱",cat:"Women's Fashion",tags:"leggings churidar women bottom casual",
+   prices:{meesho:{p:149,o:299},nykaa:{p:199,o:399},amazon:{p:249,o:449},flipkart:{p:189,o:349},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Women's Jeans",emoji:"👖",cat:"Women's Fashion",tags:"jeans women denim pants casual",
+   prices:{meesho:{p:499,o:999},nykaa:{p:649,o:1299},amazon:{p:799,o:1599},flipkart:{p:599,o:1199},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Women's Tops",emoji:"👚",cat:"Women's Fashion",tags:"tops tshirt women casual shirt",
+   prices:{meesho:{p:199,o:399},nykaa:{p:279,o:549},amazon:{p:349,o:649},flipkart:{p:249,o:499},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Anarkali Suit Set",emoji:"🪭",cat:"Women's Fashion",tags:"anarkali suit women ethnic festive",
+   prices:{meesho:{p:699,o:1399},nykaa:{p:899,o:1799},amazon:{p:1099,o:2199},flipkart:{p:849,o:1699},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Women's Handbag",emoji:"👜",cat:"Women's Fashion",tags:"handbag purse bag women fashion",
+   prices:{meesho:{p:399,o:799},nykaa:{p:549,o:1099},amazon:{p:649,o:1299},flipkart:{p:499,o:999},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Women's Sunglasses",emoji:"🕶️",cat:"Women's Fashion",tags:"sunglasses women eyewear fashion",
+   prices:{meesho:{p:149,o:299},nykaa:{p:199,o:399},amazon:{p:249,o:499},flipkart:{p:189,o:379},blinkit:{p:N},zepto:{p:N}}},
+
+  // MEN FASHION
+  {name:"Men's Formal Shirt",emoji:"👔",cat:"Men's Fashion",tags:"shirt men formal office wear",
+   prices:{meesho:{p:399,o:799},nykaa:{p:N},amazon:{p:599,o:1199},flipkart:{p:499,o:999},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Men's Jeans",emoji:"👖",cat:"Men's Fashion",tags:"jeans men denim pants casual",
+   prices:{meesho:{p:499,o:999},nykaa:{p:N},amazon:{p:799,o:1599},flipkart:{p:649,o:1299},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Men's T-Shirt",emoji:"👕",cat:"Men's Fashion",tags:"tshirt men casual top half sleeve",
+   prices:{meesho:{p:199,o:399},nykaa:{p:N},amazon:{p:349,o:649},flipkart:{p:279,o:549},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Men's Kurta",emoji:"🧥",cat:"Men's Fashion",tags:"kurta men ethnic traditional wear",
+   prices:{meesho:{p:349,o:699},nykaa:{p:N},amazon:{p:549,o:1099},flipkart:{p:449,o:899},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Men's Track Pants",emoji:"🩳",cat:"Men's Fashion",tags:"track pants men sports gym jogger",
+   prices:{meesho:{p:249,o:499},nykaa:{p:N},amazon:{p:399,o:749},flipkart:{p:329,o:649},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Men's Leather Wallet",emoji:"👛",cat:"Men's Fashion",tags:"wallet men leather bifold card",
+   prices:{meesho:{p:199,o:399},nykaa:{p:N},amazon:{p:349,o:699},flipkart:{p:279,o:549},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Men's Wrist Watch",emoji:"⌚",cat:"Men's Fashion",tags:"watch men wrist analog watch casual",
+   prices:{meesho:{p:499,o:999},nykaa:{p:N},amazon:{p:799,o:1599},flipkart:{p:649,o:1299},blinkit:{p:N},zepto:{p:N}}},
+
+  // KIDS FASHION
+  {name:"Kids' T-Shirt Pack",emoji:"👶",cat:"Kids' Fashion",tags:"kids tshirt top children clothing boy girl",
+   prices:{meesho:{p:149,o:299},nykaa:{p:199,o:379},amazon:{p:249,o:449},flipkart:{p:189,o:349},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Girls' Frock / Dress",emoji:"👗",cat:"Kids' Fashion",tags:"frock dress girl kids children party",
+   prices:{meesho:{p:199,o:399},nykaa:{p:279,o:549},amazon:{p:349,o:649},flipkart:{p:249,o:499},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Kids' Jeans",emoji:"👖",cat:"Kids' Fashion",tags:"jeans kids denim children pants",
+   prices:{meesho:{p:249,o:499},nykaa:{p:N},amazon:{p:399,o:749},flipkart:{p:299,o:599},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Kids' School Bag",emoji:"🎒",cat:"Kids' Fashion",tags:"school bag backpack kids children",
+   prices:{meesho:{p:299,o:599},nykaa:{p:N},amazon:{p:499,o:999},flipkart:{p:399,o:799},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Boys' Ethnic Kurta Set",emoji:"🧥",cat:"Kids' Fashion",tags:"boys kurta ethnic festive kids traditional",
+   prices:{meesho:{p:249,o:499},nykaa:{p:329,o:649},amazon:{p:399,o:799},flipkart:{p:299,o:599},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Kids' Raincoat",emoji:"🌧️",cat:"Kids' Fashion",tags:"raincoat kids waterproof rain jacket",
+   prices:{meesho:{p:199,o:399},nykaa:{p:N},amazon:{p:349,o:649},flipkart:{p:279,o:549},blinkit:{p:N},zepto:{p:N}}},
+
+  // FOOTWEAR
+  {name:"Women's Flat Sandals",emoji:"👡",cat:"Footwear",tags:"sandals women flat slippers footwear",
+   prices:{meesho:{p:199,o:399},nykaa:{p:279,o:549},amazon:{p:349,o:649},flipkart:{p:249,o:499},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Women's Block Heels",emoji:"👠",cat:"Footwear",tags:"heels women block stiletto footwear",
+   prices:{meesho:{p:399,o:799},nykaa:{p:549,o:1099},amazon:{p:649,o:1299},flipkart:{p:499,o:999},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Men's Running Shoes",emoji:"👟",cat:"Footwear",tags:"running shoes men sports sneakers athletic",
+   prices:{meesho:{p:699,o:1399},nykaa:{p:N},amazon:{p:999,o:1999},flipkart:{p:849,o:1699},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Men's Formal Shoes",emoji:"👞",cat:"Footwear",tags:"formal shoes men leather office derby",
+   prices:{meesho:{p:799,o:1599},nykaa:{p:N},amazon:{p:1199,o:2299},flipkart:{p:999,o:1999},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Kids' Sneakers",emoji:"👟",cat:"Footwear",tags:"sneakers kids shoes children velcro",
+   prices:{meesho:{p:299,o:599},nykaa:{p:N},amazon:{p:499,o:999},flipkart:{p:399,o:799},blinkit:{p:N},zepto:{p:N}}},
+  {name:"Flip Flops / Slippers",emoji:"🩴",cat:"Footwear",tags:"flip flops slippers chappals casual",
+   prices:{meesho:{p:79,o:149},nykaa:{p:N},amazon:{p:149,o:299},flipkart:{p:99,o:199},blinkit:{p:199,o:349},zepto:{p:189,o:329}}},
+  {name:"Sports / Gym Shoes",emoji:"🏃",cat:"Footwear",tags:"gym shoes sports training workout sneakers",
+   prices:{meesho:{p:599,o:1199},nykaa:{p:N},amazon:{p:899,o:1799},flipkart:{p:749,o:1499},blinkit:{p:N},zepto:{p:N}}},
+
+  // DAILY ESSENTIALS
+  {name:"Toothpaste 150g",emoji:"🦷",cat:"Daily Essentials",tags:"toothpaste dental oral hygiene brushing",
+   prices:{meesho:{p:49,o:89},nykaa:{p:N},amazon:{p:65,o:109},flipkart:{p:55,o:95},blinkit:{p:75,o:119},zepto:{p:72,o:115}}},
+  {name:"Hand Wash 250ml",emoji:"🤲",cat:"Daily Essentials",tags:"hand wash liquid soap hygiene",
+   prices:{meesho:{p:69,o:119},nykaa:{p:89,o:149},amazon:{p:99,o:159},flipkart:{p:79,o:129},blinkit:{p:109,o:169},zepto:{p:105,o:165}}},
+  {name:"Body Lotion 200ml",emoji:"🧴",cat:"Daily Essentials",tags:"body lotion moisturizer skin care",
+   prices:{meesho:{p:119,o:229},nykaa:{p:149,o:269},amazon:{p:169,o:299},flipkart:{p:139,o:259},blinkit:{p:189,o:329},zepto:{p:179,o:319}}},
+  {name:"Deo Spray / Roll-on",emoji:"🌬️",cat:"Daily Essentials",tags:"deo deodorant spray roll on fragrance",
+   prices:{meesho:{p:89,o:179},nykaa:{p:109,o:199},amazon:{p:129,o:229},flipkart:{p:99,o:189},blinkit:{p:139,o:249},zepto:{p:135,o:239}}},
+  {name:"Sanitary Pads Pack",emoji:"🩹",cat:"Daily Essentials",tags:"sanitary pads napkin women hygiene",
+   prices:{meesho:{p:59,o:99},nykaa:{p:75,o:129},amazon:{p:89,o:139},flipkart:{p:69,o:119},blinkit:{p:99,o:149},zepto:{p:95,o:145}}},
+  {name:"Aloe Vera Gel",emoji:"🌱",cat:"Daily Essentials",tags:"aloe vera gel soothing skin face body",
+   prices:{meesho:{p:79,o:149},nykaa:{p:99,o:179},amazon:{p:109,o:199},flipkart:{p:89,o:159},blinkit:{p:119,o:209},zepto:{p:115,o:205}}},
+  {name:"Wet Wipes 80 Sheets",emoji:"🫧",cat:"Daily Essentials",tags:"wet wipes tissue baby cleaning",
+   prices:{meesho:{p:59,o:99},nykaa:{p:79,o:129},amazon:{p:89,o:149},flipkart:{p:69,o:119},blinkit:{p:99,o:159},zepto:{p:95,o:155}}},
+  {name:"Tissue Paper Pack",emoji:"🧻",cat:"Daily Essentials",tags:"tissue paper napkin soft pack",
+   prices:{meesho:{p:79,o:129},nykaa:{p:N},amazon:{p:99,o:159},flipkart:{p:89,o:145},blinkit:{p:109,o:175},zepto:{p:105,o:169}}},
+  {name:"Shampoo 200ml",emoji:"🚿",cat:"Daily Essentials",tags:"shampoo hair wash care anti dandruff",
+   prices:{meesho:{p:99,o:199},nykaa:{p:125,o:229},amazon:{p:149,o:259},flipkart:{p:119,o:219},blinkit:{p:159,o:279},zepto:{p:155,o:269}}},
+  {name:"Cotton Buds 100pc",emoji:"🌾",cat:"Daily Essentials",tags:"cotton buds ear swab cleaning hygiene",
+   prices:{meesho:{p:39,o:69},nykaa:{p:49,o:85},amazon:{p:59,o:99},flipkart:{p:45,o:79},blinkit:{p:65,o:109},zepto:{p:62,o:105}}},
+  {name:"Dish Wash Liquid",emoji:"🍽️",cat:"Daily Essentials",tags:"dish wash liquid soap kitchen cleaning utensils",
+   prices:{meesho:{p:69,o:129},nykaa:{p:N},amazon:{p:99,o:169},flipkart:{p:79,o:139},blinkit:{p:109,o:189},zepto:{p:105,o:179}}},
+  {name:"Floor Cleaner 500ml",emoji:"🧹",cat:"Daily Essentials",tags:"floor cleaner household liquid cleaning mopping",
+   prices:{meesho:{p:79,o:149},nykaa:{p:N},amazon:{p:119,o:199},flipkart:{p:99,o:169},blinkit:{p:129,o:219},zepto:{p:125,o:209}}},
+];
+
+const CATS=['All',...new Set(PRODUCTS.map(p=>p.cat))];
+let activeCat='All';
+const CAT_ICONS={'All':'🌐','Cricket Kit':'🏏','Beauty':'💄','Electronics':'📱',"Women's Fashion":'👗',"Men's Fashion":'👔',"Kids' Fashion":'👶','Footwear':'👟','Daily Essentials':'🧴'};
+
+const fmt=n=>'₹'+n.toLocaleString('en-IN');
+const disc=(p,o)=>(o&&o>p)?Math.round((1-p/o)*100):null;
+function cheapKey(prices){let min=Infinity,k=null;Object.entries(prices).forEach(([key,v])=>{if(v.p&&v.p<min){min=v.p;k=key;}});return k;}
+function maxSave(prices){const v=Object.values(prices).filter(x=>x.p).map(x=>x.p);return v.length>1?Math.max(...v)-Math.min(...v):0;}
+function minPr(prices){const v=Object.values(prices).filter(x=>x.p).map(x=>x.p);return v.length?Math.min(...v):Infinity;}
+function maxPr(prices){const v=Object.values(prices).filter(x=>x.p).map(x=>x.p);return v.length?Math.max(...v):0;}
+function hl(text,q){if(!q)return text;const re=new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');return text.replace(re,'<mark>$1</mark>');}
+
+// Build tabs
+(function(){
+  const wrap=document.getElementById('catTabs');
+  CATS.forEach(c=>{
+    const b=document.createElement('button');
+    b.className='ctab'+(c==='All'?' active':'');
+    b.textContent=(CAT_ICONS[c]||'📦')+' '+c;
+    b.onclick=()=>{activeCat=c;document.querySelectorAll('.ctab').forEach(t=>t.classList.remove('active'));b.classList.add('active');renderAll();};
+    wrap.appendChild(b);
+  });
+})();
+
+function handleSearch(){
+  const v=document.getElementById('searchInput').value;
+  document.getElementById('clearBtn').style.display=v?'block':'none';
+  renderAll();
+}
+function clearSearch(){
+  document.getElementById('searchInput').value='';
+  document.getElementById('clearBtn').style.display='none';
+  renderAll();
+}
+
+function renderAll(){
+  const q=document.getElementById('searchInput').value.toLowerCase().trim();
+  const sort=document.getElementById('sortSel').value;
+
+  let list=PRODUCTS.filter(p=>{
+    const mQ=!q||p.name.toLowerCase().includes(q)||p.cat.toLowerCase().includes(q)||(p.tags&&p.tags.toLowerCase().includes(q));
+    const mC=activeCat==='All'||p.cat===activeCat;
+    return mQ&&mC;
+  });
+
+  if(sort==='savings')list.sort((a,b)=>maxSave(b.prices)-maxSave(a.prices));
+  else if(sort==='low')list.sort((a,b)=>minPr(a.prices)-minPr(b.prices));
+  else if(sort==='high')list.sort((a,b)=>maxPr(b.prices)-maxPr(a.prices));
+  else if(sort==='az')list.sort((a,b)=>a.name.localeCompare(b.name));
+
+  const grid=document.getElementById('grid');
+  const noRes=document.getElementById('noRes');
+  const rCount=document.getElementById('resultCount');
+  grid.innerHTML='';
+
+  if(!list.length){
+    noRes.style.display='block';
+    document.getElementById('noResQ').textContent=q||activeCat;
+    rCount.textContent='';return;
+  }
+  noRes.style.display='none';
+  rCount.textContent=q?`${list.length} result${list.length!==1?'s':''} for "${q}"`:`Showing ${list.length} product${list.length!==1?'s':''}`;
+
+  list.forEach((prod,idx)=>{
+    const bk=cheapKey(prod.prices);
+    const bs=STORES.find(s=>s.key===bk);
+    const sv=maxSave(prod.prices);
+    const allP=Object.values(prod.prices).filter(v=>v.p).map(v=>v.p);
+    const mx=allP.length?Math.max(...allP):1;
+    const sp=mx>0?Math.round(sv/mx*100):0;
+
+    const card=document.createElement('div');
+    card.className='pcard';
+    card.style.animationDelay=`${Math.min(idx,12)*0.045}s`;
+
+    card.innerHTML=`
+      <div class="chead">
+        <div class="pemoji">${prod.emoji}</div>
+        <div class="pmeta">
+          <div class="pname">${hl(prod.name,q)}</div>
+          <div class="pcat-badge">${CAT_ICONS[prod.cat]||''} ${prod.cat}</div>
+        </div>
+        ${bs?`<div class="pbest"><div class="pbest-lbl">Best price</div><div class="pbest-val">${bs.icon} ${bs.name}</div></div>`:''}
+      </div>`;
+
+    const row=document.createElement('div');
+    row.className='prow';
+
+    STORES.forEach(st=>{
+      const d=prod.prices[st.key];
+      const isBest=st.key===bk;
+      const cell=document.createElement('div');
+      cell.className=`pcell ${st.tc}${isBest?' best':''}`;
+
+      if(!d||!d.p){
+        // Not available — still show a visit button
+        cell.innerHTML=`
+          <div class="csname">${st.name}</div>
+          <div class="cna">Not on ${st.name}</div>
+          <button class="shop-btn na-btn" onclick="window.open('${st.searchUrl(prod.name)}','_blank')">↗ Browse ${st.name}</button>
+        `;
+      } else {
+        const pct=disc(d.p,d.o);
+        // Build button — clicking searches this product on that store
+        const searchURL=st.searchUrl(prod.name);
+        cell.innerHTML=`
+          <div class="csname">${st.name}</div>
+          <div class="cprice">${fmt(d.p)}</div>
+          ${d.o?`<div class="corig">${fmt(d.o)}</div>`:''}
+          ${pct?`<div class="coff">-${pct}% OFF</div>`:''}
+          <button class="shop-btn" onclick="window.open('${searchURL}','_blank')">${st.icon} Shop on ${st.name}</button>
+        `;
+      }
+      row.appendChild(cell);
+    });
+
+    card.appendChild(row);
+
+    const foot=document.createElement('div');
+    foot.className='cfoot';
+    foot.innerHTML=`<span class="fl">Save up to</span><span class="fa">${fmt(sv)} (${sp}%)</span><div class="bwrap"><div class="bfill" style="width:${sp}%"></div></div><span class="fl">by choosing wisely 💡</span>`;
+    card.appendChild(foot);
+    grid.appendChild(card);
+  });
+}
+
+renderAll();
+</script>
+</body>
+</html>
